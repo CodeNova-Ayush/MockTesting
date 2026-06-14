@@ -278,7 +278,37 @@ body.light .empty-state { border-color: lightgray; }
 .view-desc { font-size: 1rem; color: gray; }
 body.light .view-desc { color: dimgray; }
 
+.menu-toggle-btn {
+  display: none;
+  background: none;
+  border: 1px solid gray;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+body.dark .menu-toggle-btn { color: white; border-color: rgb(80, 80, 80); }
+body.light .menu-toggle-btn { color: black; border-color: lightgray; }
+.menu-toggle-btn:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
 @media (max-width: 768px) {
-  .sidebar { display: none; }
+  .menu-toggle-btn { display: flex; }
+  .sidebar {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 240px;
+    height: calc(100vh - 60px);
+    z-index: 1000;
+  }
+  .sidebar.active {
+    display: flex;
+  }
   .view-container { padding: 16px; }
 }

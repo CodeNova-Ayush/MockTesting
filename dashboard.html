@@ -16,6 +16,9 @@
   <div class="dashboard-layout">
     <div class="topbar">
       <div class="topbar-left">
+        <button id="menu-toggle" class="menu-toggle-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
         <a href="index.html" class="topbar-logo">
           <img src="logo.png?v=2" alt="Logo" class="topbar-logo-img">
           <span>StackOne</span>
@@ -71,6 +74,23 @@
           } else {
             document.body.className = "dark";
             localStorage.setItem("stackone_theme", "dark");
+          }
+        });
+      }
+
+      let menuBtn = document.getElementById("menu-toggle");
+      let sidebar = document.querySelector(".sidebar");
+      if (menuBtn !== null && sidebar !== null) {
+        menuBtn.addEventListener("click", function() {
+          sidebar.classList.toggle("active");
+        });
+      }
+
+      let links = document.querySelectorAll(".sidebar-link");
+      for (let i = 0; i < links.length; i++) {
+        links[i].addEventListener("click", function() {
+          if (sidebar !== null) {
+            sidebar.classList.remove("active");
           }
         });
       }
