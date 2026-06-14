@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StackOne Dashboard</title>
+  <link rel="stylesheet" href="css/global.css?v=3">
+  <link rel="stylesheet" href="portfolio/portfolio.css?v=3">
+  <link rel="stylesheet" href="quiz/quiz.css?v=3">
+  <link rel="stylesheet" href="expense/expense.css?v=3">
+  <link rel="stylesheet" href="news/news.css?v=3">
+  <link rel="stylesheet" href="github/github.css?v=3">
+  <link rel="stylesheet" href="kanban/kanban.css?v=3">
+</head>
+<body class="dark">
+  <div class="dashboard-layout">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a href="index.html" class="topbar-logo">
+          <img src="logo.png?v=2" alt="Logo" class="topbar-logo-img">
+          <span>StackOne</span>
+        </a>
+        <div class="topbar-divider"></div>
+        <h1 id="page-title" class="page-title">Portfolio</h1>
+      </div>
+      <div class="topbar-right">
+        <button id="theme-toggle" class="theme-toggle-btn">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-nav">
+        <ul>
+          <li><a href="#portfolio" class="sidebar-link active" id="nav-portfolio"><span class="nav-label">Portfolio</span></a></li>
+          <li><a href="#quiz" class="sidebar-link" id="nav-quiz"><span class="nav-label">Quiz</span></a></li>
+          <li><a href="#expense" class="sidebar-link" id="nav-expense"><span class="nav-label">Expenses</span></a></li>
+          <li><a href="#news" class="sidebar-link" id="nav-news"><span class="nav-label">News</span></a></li>
+          <li><a href="#github" class="sidebar-link" id="nav-github"><span class="nav-label">GitHub</span></a></li>
+          <li><a href="#kanban" class="sidebar-link" id="nav-kanban"><span class="nav-label">Kanban</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div id="view-container" class="view-container"></div>
+    </div>
+  </div>
+
+  <script>
+    let savedTheme = localStorage.getItem("stackone_theme");
+    if (savedTheme === null) {
+      savedTheme = "dark";
+    }
+    if (savedTheme === "dark") {
+      document.body.className = "dark";
+    } else {
+      document.body.className = "light";
+    }
+
+    window.addEventListener("DOMContentLoaded", function() {
+      let toggleBtn = document.getElementById("theme-toggle");
+      if (toggleBtn !== null) {
+        toggleBtn.addEventListener("click", function() {
+          let isDark = document.body.classList.contains("dark");
+          if (isDark) {
+            document.body.className = "light";
+            localStorage.setItem("stackone_theme", "light");
+          } else {
+            document.body.className = "dark";
+            localStorage.setItem("stackone_theme", "dark");
+          }
+        });
+      }
+    });
+  </script>
+
+  <script type="module">
+    window.AppState = {
+      currentView: "portfolio",
+      quiz: {
+        currentIndex: 0,
+        score: 0,
+        answered: false,
+        selectedOption: null,
+        answersLog: []
+      },
+      expense: {
+        entries: []
+      },
+      kanban: {
+        todo: [],
+        inProgress: [],
+        done: []
+      }
+    };
+
+    function handleRoute() {
+      let hash = window.location.hash;
+      if (hash === "") {
+        hash = "#portfolio";
+      }
+
+      let allLinks = document.querySelectorAll(".sidebar-link");
+      for (let i = 0; i < allLinks.length; i++) {
+        allLinks[i].classList.remove("active");
+      }
+
+      let currentLink = document.querySelector(".sidebar-link[href='" + hash + "']");
+      if (currentLink !== null) {
+        currentLink.classList.add("active");
+      }
+
+      let viewName = hash.substring(1);
+      window.AppState.currentView = viewName;
+
+      let firstLetter = viewName.substring(0, 1).toUpperCase();
+      let restOfName = viewName.substring(1);
+      let capitalized = firstLetter + restOfName;
+
+      let pageTitle = document.getElementById("page-title");
+      if (pageTitle !== null) {
+        pageTitle.innerText = capitalized;
+      }
+      document.title = "StackOne - " + capitalized;
+
+      let container = document.getElementById("view-container");
+      if (container !== null) {
+        container.innerHTML = "";
+        let htmlUrl = "./" + viewName + "/" + viewName + ".html";
+        fetch(htmlUrl)
+          .then(function(res) {
+            return res.text();
+          })
+          .then(function(html) {
+            container.innerHTML = html;
+            let jsUrl = "./" + viewName + "/" + viewName + ".js?v=2";
+            import(jsUrl)
+              .then(function(mod) {
+                mod.init(container);
+              })
+              .catch(function(err) {
+                console.log(err);
+              });
+          })
+          .catch(function(err) {
+            console.log(err);
+          });
+      }
+    }
+
+    window.addEventListener("hashchange", handleRoute);
+    window.addEventListener("load", handleRoute);
+  </script>
+</body>
+</html>
