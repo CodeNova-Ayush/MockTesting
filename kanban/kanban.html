@@ -1,0 +1,41 @@
+<div class="kanban-container">
+  <div class="view-header">
+    <h2 class="view-title">Kanban Workflow</h2>
+    <p class="view-desc">Organize project sprints and manage assignments. Drag cards to update progress.</p>
+  </div>
+
+  <div class="kanban-board">
+    <div class="kanban-column" data-column="todo" id="col-todo">
+      <div class="kanban-column-header">
+        <span class="kanban-column-title">
+          <span style="color: crimson;">●</span> To Do
+        </span>
+        <span class="kanban-column-count" id="count-todo">0</span>
+      </div>
+      <div class="kanban-cards-list" id="cards-todo"></div>
+      <button class="btn-add-task" data-column="todo">+ Add Card</button>
+    </div>
+
+    <div class="kanban-column" data-column="inProgress" id="col-inProgress">
+      <div class="kanban-column-header">
+        <span class="kanban-column-title">
+          <span style="color: orange;">●</span> In Progress
+        </span>
+        <span class="kanban-column-count" id="count-inProgress">0</span>
+      </div>
+      <div class="kanban-cards-list" id="cards-inProgress"></div>
+      <button class="btn-add-task" data-column="inProgress">+ Add Card</button>
+    </div>
+
+    <div class="kanban-column" data-column="done" id="col-done">
+      <div class="kanban-column-header">
+        <span class="kanban-column-title">
+          <span style="color: green;">●</span> Done
+        </span>
+        <span class="kanban-column-count" id="count-done">0</span>
+      </div>
+      <div class="kanban-cards-list" id="cards-done"></div>
+      <button class="btn-add-task" data-column="done">+ Add Card</button>
+    </div>
+  </div>
+</div>
