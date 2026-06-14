@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StackOne</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    body.dark {
+      background: linear-gradient(145deg, rgb(24, 24, 32), rgb(30, 28, 40), rgb(22, 22, 30));
+      color: white;
+    }
+    body.light {
+      background: linear-gradient(145deg, rgb(225, 220, 238), rgb(215, 210, 230), rgb(230, 225, 240));
+      color: black;
+    }
+
+    .theme-btn {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: none;
+      border: 1px solid gray;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    body.dark .theme-btn { color: white; border-color: dimgray; }
+    body.light .theme-btn { color: black; border-color: lightgray; }
+    body.dark .theme-btn:hover { background-color: dimgray; }
+    body.light .theme-btn:hover { background-color: lightgray; }
+    .sun-icon { display: none; }
+    .moon-icon { display: block; }
+    body.dark .sun-icon { display: block; }
+    body.dark .moon-icon { display: none; }
+
+    .hero-card {
+      width: 90%;
+      max-width: 620px;
+      border-radius: 28px;
+      padding: 60px 48px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    body.light .hero-card {
+      background-color: white;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+    }
+    body.dark .hero-card {
+      background-color: rgb(30, 30, 38);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .brand-logo { width: 40px; height: 40px; }
+    .brand-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: rgb(198, 90, 61);
+    }
+
+    .hero-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 18px;
+    }
+    body.light .hero-title { color: rgb(20, 20, 30); }
+    body.dark .hero-title { color: rgb(245, 245, 250); }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      max-width: 440px;
+      margin-bottom: 36px;
+    }
+    body.light .hero-subtitle { color: rgb(120, 115, 130); }
+    body.dark .hero-subtitle { color: rgb(150, 150, 165); }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 36px;
+      border-radius: 100px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      background-color: rgb(198, 90, 61);
+      color: white;
+      box-shadow: 0 4px 16px rgba(198,90,61,0.35);
+    }
+    .btn-cta:hover {
+      background-color: rgb(224, 122, 92);
+    }
+
+    .footer-text {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: gray;
+    }
+  </style>
+</head>
+<body class="dark">
+
+  <button id="theme-toggle" class="theme-btn">
+    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+  </button>
+
+  <div class="hero-card">
+    <div class="brand-row">
+      <img src="logo.png?v=2" alt="StackOne Logo" class="brand-logo">
+      <span class="brand-name">StackOne</span>
+    </div>
+    <h1 class="hero-title">Your Ultimate Developer<br>Hub &amp; Workspace</h1>
+    <p class="hero-subtitle">Manage team portfolios, track project expenses, take coding quizzes, read tech news, search GitHub, and organize tasks with Kanban.</p>
+    <a href="dashboard.html" class="btn-cta">
+      Get Started
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+    </a>
+  </div>
+
+  <p class="footer-text">Built with love by Team StackOne</p>
+
+  <script>
+    var theme = localStorage.getItem("stackone_theme");
+    if (theme === null) {
+      theme = "dark";
+    }
+    if (theme === "dark") {
+      document.body.className = "dark";
+    } else {
+      document.body.className = "light";
+    }
+    window.addEventListener("DOMContentLoaded", function() {
+      var btn = document.getElementById("theme-toggle");
+      if (btn !== null) {
+        btn.addEventListener("click", function() {
+          var current = document.body.className;
+          if (current === "dark") {
+            document.body.className = "light";
+            localStorage.setItem("stackone_theme", "light");
+          } else {
+            document.body.className = "dark";
+            localStorage.setItem("stackone_theme", "dark");
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
