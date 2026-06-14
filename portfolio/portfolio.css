@@ -1,0 +1,132 @@
+.portfolio-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.portfolio-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.portfolio-card {
+  border: 1px solid gray;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: calc(33.333% - 16px);
+  min-width: 280px;
+  min-height: 360px;
+}
+body.dark .portfolio-card {
+  background-color: rgb(30, 30, 35);
+  border-color: rgb(60, 60, 65);
+}
+body.light .portfolio-card {
+  background-color: white;
+  border-color: lightgray;
+}
+.portfolio-card:hover {
+  border-color: rgb(198, 90, 61);
+}
+.portfolio-avatar-placeholder {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 16px;
+  border: 3px solid gray;
+}
+body.dark .portfolio-avatar-placeholder { border-color: rgb(80, 80, 80); }
+body.light .portfolio-avatar-placeholder { border-color: lightgray; }
+.portfolio-card:hover .portfolio-avatar-placeholder { border-color: rgb(198, 90, 61); }
+.portfolio-avatar-placeholder.purple { background-color: rgb(198, 90, 61); }
+.portfolio-avatar-placeholder.blue { background-color: steelblue; }
+.portfolio-avatar-placeholder.green { background-color: green; }
+.portfolio-avatar-placeholder.orange { background-color: orange; }
+.portfolio-avatar-placeholder.red { background-color: crimson; }
+.portfolio-name { font-size: 1.25rem; font-weight: bold; margin-bottom: 4px; }
+.portfolio-role { font-size: 0.9rem; color: gray; margin-bottom: 16px; }
+body.light .portfolio-role { color: dimgray; }
+.portfolio-skills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+.skill-tag {
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 100px;
+    border: 1px solid gray;
+}
+body.dark .skill-tag { background-color: rgb(40, 40, 45); color: silver; border-color: rgb(80, 80, 80); }
+body.light .skill-tag { background-color: whitesmoke; color: dimgray; border-color: lightgray; }
+.portfolio-card:hover .skill-tag { border-color: rgb(198, 90, 61); color: rgb(198, 90, 61); }
+body.dark .portfolio-card:hover .skill-tag { color: white; }
+.portfolio-links {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+.portfolio-github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid gray;
+  flex: 1;
+  justify-content: center;
+  text-decoration: none;
+}
+body.dark .portfolio-github-link { background-color: rgb(45, 51, 59); color: white; border-color: rgb(68, 76, 86); }
+body.light .portfolio-github-link { background-color: rgb(36, 41, 47); color: white; border-color: rgb(36, 41, 47); }
+.portfolio-github-link:hover { background-color: rgb(198, 90, 61); color: white; border-color: rgb(198, 90, 61); }
+.portfolio-linkedin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid gray;
+  flex: 1;
+  justify-content: center;
+  text-decoration: none;
+  background-color: rgb(10, 102, 194);
+  color: white;
+  border-color: rgb(10, 102, 194);
+}
+.portfolio-linkedin-link:hover { background-color: steelblue; border-color: steelblue; }
+.contact-section { margin-top: 24px; }
+.contact-title { font-size: 1.5rem; margin-bottom: 8px; }
+.contact-desc { font-size: 0.95rem; color: gray; margin-bottom: 24px; }
+body.light .contact-desc { color: dimgray; }
+.input-invalid { border-color: crimson !important; }
+.form-success-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: green;
+  border: 1px solid darkgreen;
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
