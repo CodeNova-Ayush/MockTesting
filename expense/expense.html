@@ -1,0 +1,67 @@
+<div class="expense-container">
+  <div class="view-header">
+    <h2 class="view-title">Expense Tracker</h2>
+    <p class="view-desc">Manage your revenue ledger and track business expenses in real-time.</p>
+  </div>
+
+  <div class="expense-summary-row">
+    <div class="summary-card">
+      <span class="summary-label">Net Balance</span>
+      <span id="exp-total-balance" class="summary-val"></span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label">Total Income</span>
+      <span id="exp-total-income" class="summary-val positive"></span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label">Total Expenses</span>
+      <span id="exp-total-expense" class="summary-val negative"></span>
+    </div>
+  </div>
+
+  <div class="expense-workspace">
+    <div class="expense-form-card card">
+      <h3 id="form-heading" class="expense-form-title">Add Transaction</h3>
+      <form id="expense-form" novalidate>
+        <div class="form-group">
+          <label for="exp-desc" class="form-label">Description</label>
+          <input type="text" id="exp-desc" class="form-input" placeholder="e.g. Server hosting">
+          <span id="exp-error-desc" class="form-error">Description is required.</span>
+        </div>
+        <div class="form-group">
+          <label for="exp-amount" class="form-label">Amount ($)</label>
+          <input type="number" id="exp-amount" class="form-input" placeholder="0.00" step="0.01">
+          <span id="exp-error-amount" class="form-error">Provide a valid amount (> 0).</span>
+        </div>
+        <div class="form-group">
+          <label for="exp-type" class="form-label">Type</label>
+          <select id="exp-type" class="form-select">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="exp-date" class="form-label">Date</label>
+          <input type="date" id="exp-date" class="form-input">
+          <span id="exp-error-date" class="form-error">Select a valid date.</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button type="submit" id="exp-submit-btn" class="btn btn-primary" style="flex: 1;">Add Entry</button>
+          <button type="button" id="exp-cancel-btn" class="btn btn-secondary" style="display: none;">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="ledger-card card">
+      <div class="ledger-header">
+        <h3>Ledger Log</h3>
+        <div class="filter-tabs" id="ledger-filters">
+          <button class="filter-tab active" data-filter="all">All</button>
+          <button class="filter-tab" data-filter="income">Income</button>
+          <button class="filter-tab" data-filter="expense">Expenses</button>
+        </div>
+      </div>
+      <div class="ledger-list" id="ledger-items"></div>
+    </div>
+  </div>
+</div>

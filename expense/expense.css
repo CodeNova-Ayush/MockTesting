@@ -1,0 +1,141 @@
+.expense-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.expense-summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.summary-card {
+  border: 1px solid gray;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 200px;
+}
+body.dark .summary-card { background-color: rgb(30, 30, 35); border-color: rgb(60, 60, 65); }
+body.light .summary-card { background-color: white; border-color: lightgray; }
+.summary-label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: gray;
+  text-transform: uppercase;
+}
+body.light .summary-label { color: dimgray; }
+.summary-val { font-size: 1.75rem; font-weight: bold; }
+.summary-val.positive { color: green; }
+.summary-val.negative { color: crimson; }
+body.dark .summary-val.neutral { color: white; }
+body.light .summary-val.neutral { color: black; }
+
+.expense-workspace {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.expense-form-card { padding: 24px; width: 320px; min-width: 320px; }
+.expense-form-title {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  border-bottom: 1px solid gray;
+  padding-bottom: 10px;
+}
+body.dark .expense-form-title { border-bottom-color: rgb(60, 60, 65); }
+body.light .expense-form-title { border-bottom-color: lightgray; }
+
+.ledger-card { padding: 24px; flex: 1; }
+.ledger-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.filter-tabs {
+  display: flex;
+  border: 1px solid gray;
+  border-radius: 8px;
+  padding: 4px;
+  gap: 4px;
+}
+body.dark .filter-tabs { background-color: rgb(30, 30, 35); border-color: rgb(60, 60, 65); }
+body.light .filter-tabs { background-color: whitesmoke; border-color: lightgray; }
+.filter-tab {
+  background: none;
+  border: none;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: gray;
+  border-radius: 6px;
+  cursor: pointer;
+}
+body.light .filter-tab { color: dimgray; }
+.filter-tab:hover { color: rgb(198, 90, 61); }
+body.dark .filter-tab.active { background-color: rgb(45, 45, 50); color: rgb(198, 90, 61); }
+body.light .filter-tab.active { background-color: white; color: rgb(198, 90, 61); }
+
+.ledger-list { display: flex; flex-direction: column; gap: 12px; }
+.ledger-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border: 1px solid gray;
+  border-radius: 10px;
+}
+body.dark .ledger-item { background-color: rgb(35, 35, 40); border-color: rgb(60, 60, 65); }
+body.light .ledger-item { background-color: whitesmoke; border-color: lightgray; }
+.ledger-item:hover { border-color: rgb(198, 90, 61); }
+.ledger-item-left { display: flex; align-items: center; gap: 12px; }
+.ledger-item-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+.ledger-item-icon.income { background-color: lightgreen; color: green; }
+body.dark .ledger-item-icon.income { background-color: green; color: white; }
+.ledger-item-icon.expense { background-color: coral; color: crimson; }
+body.dark .ledger-item-icon.expense { background-color: crimson; color: white; }
+.ledger-item-info { display: flex; flex-direction: column; }
+.ledger-item-desc { font-weight: bold; }
+body.dark .ledger-item-desc { color: white; }
+body.light .ledger-item-desc { color: black; }
+.ledger-item-date { font-size: 0.75rem; color: gray; }
+body.light .ledger-item-date { color: dimgray; }
+.ledger-item-right { display: flex; align-items: center; gap: 20px; }
+.ledger-item-amount { font-weight: bold; font-size: 1.1rem; }
+.ledger-item-amount.income { color: green; }
+.ledger-item-amount.expense { color: crimson; }
+.ledger-item-actions { display: flex; gap: 8px; }
+.btn-icon {
+  background: none;
+  border: 1px solid gray;
+  color: gray;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+body.dark .btn-icon { border-color: rgb(80, 80, 80); }
+body.light .btn-icon { border-color: lightgray; color: dimgray; }
+.btn-icon:hover { border-color: rgb(198, 90, 61); color: rgb(198, 90, 61); }
+.btn-icon.delete:hover { border-color: crimson; color: crimson; }
+
+@media (max-width: 900px) {
+  .expense-workspace { flex-direction: column; }
+  .expense-form-card { width: 100%; min-width: auto; }
+}
