@@ -1,0 +1,86 @@
+.news-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.news-controls-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.news-search-bar {
+  display: flex;
+  gap: 12px;
+}
+.news-search-bar .form-input { flex: 1; }
+.news-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.category-pill {
+  border: 1px solid gray;
+  color: gray;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: transparent;
+}
+body.dark .category-pill { border-color: rgb(80, 80, 80); }
+body.light .category-pill { border-color: lightgray; color: dimgray; }
+.category-pill:hover { color: rgb(198, 90, 61); border-color: rgb(198, 90, 61); }
+.category-pill.active { background-color: rgb(198, 90, 61); color: white; border-color: rgb(198, 90, 61); }
+.news-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  border: 1px solid orange;
+  color: orange;
+}
+body.dark .news-banner { background-color: rgb(30, 30, 35); }
+body.light .news-banner { background-color: white; }
+.news-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.news-card {
+  border: 1px solid gray;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 31%;
+  min-width: 280px;
+  flex-grow: 1;
+}
+body.dark .news-card { background-color: rgb(30, 30, 35); border-color: rgb(60, 60, 65); }
+body.light .news-card { background-color: white; border-color: lightgray; }
+.news-card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.news-card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: gray;
+  margin-bottom: 12px;
+}
+.news-card-source { font-weight: bold; color: rgb(198, 90, 61); }
+.news-card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; line-height: 1.4; }
+.news-card-desc { font-size: 0.9rem; color: gray; line-height: 1.5; margin-bottom: 20px; flex: 1; }
+body.light .news-card-desc { color: dimgray; }
+.news-card-link { font-size: 0.9rem; font-weight: bold; color: rgb(198, 90, 61); }
+.news-card-link:hover { color: rgb(224, 122, 92); }
+
+@media (max-width: 768px) {
+  .news-card { width: 100%; }
+}

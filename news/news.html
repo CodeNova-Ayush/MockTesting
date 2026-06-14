@@ -1,0 +1,27 @@
+<div class="news-container">
+  <div class="view-header">
+    <h2 class="view-title">Live News Feed</h2>
+    <p class="view-desc">Read trending technical articles, press releases, and research highlights.</p>
+  </div>
+
+  <div class="news-controls-card card">
+    <div class="news-search-bar">
+      <input type="text" id="news-search-input" class="form-input" placeholder="Search technical terms (e.g. JavaScript, AI, Fusion)...">
+      <button id="news-search-btn" class="btn btn-primary">Search</button>
+    </div>
+    <div class="news-categories" id="news-category-pills">
+      <button class="category-pill active" data-category="technology">Technology</button>
+      <button class="category-pill" data-category="sports">Sports</button>
+      <button class="category-pill" data-category="business">Business</button>
+      <button class="category-pill" data-category="health">Health</button>
+      <button class="category-pill" data-category="science">Science</button>
+    </div>
+  </div>
+
+  <div id="news-demo-banner" class="news-banner" style="display: none;">
+    <span>ℹ️</span>
+    <span><strong>StackOne News Demo:</strong> Using local categorized backup files. To query real-time items, insert your NewsAPI key inside <code>news/news.js</code>.</span>
+  </div>
+
+  <div id="news-display-area"></div>
+</div>
