@@ -130,12 +130,10 @@ body.light .sidebar {
 body.dark .sidebar-link:hover {
     background-color: rgb(40, 40, 45);
     color: white;
-    border-left-color: rgb(198, 90, 61);
 }
 body.light .sidebar-link:hover {
-    background-color: rgb(250, 242, 232);
+    background-color: rgba(0, 0, 0, 0.05);
     color: black;
-    border-left-color: rgb(198, 90, 61);
 }
 body.dark .sidebar-link.active {
   background: linear-gradient(135deg, rgb(198, 90, 61), rgb(224, 122, 92));

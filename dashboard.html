@@ -159,7 +159,11 @@
             let jsUrl = "./" + viewName + "/" + viewName + ".js?v=2";
             import(jsUrl)
               .then(function(mod) {
-                mod.init(container);
+                if (mod.init) {
+                  mod.init(container);
+                } else if (window.initExpense) {
+                  window.initExpense(container);
+                }
               })
               .catch(function(err) {
                 console.log(err);

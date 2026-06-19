@@ -27,7 +27,7 @@ let searchQuery = "";
 
 export function init(container) {
   let banner = container.querySelector("#news-demo-banner");
-  if (banner) {
+  if (banner !== null) {
     banner.style.display = "flex";
   }
   setupPage(container);
@@ -35,91 +35,108 @@ export function init(container) {
 }
 
 function setupPage(container) {
-  let searchBtn = container.querySelector("#news-search-btn");
-  let searchInput = container.querySelector("#news-search-input");
-
-  searchBtn.addEventListener("click", function() {
-    searchQuery = searchInput.value.trim();
+  let btn = container.querySelector("#news-search-btn");
+  let input = container.querySelector("#news-search-input");
+  btn.addEventListener("click", function() {
+    searchQuery = input.value.trim();
     getNews(container);
   });
+  bindEnterKey(container, input);
+  setupCategoryEvents(container, input);
+}
 
-  searchInput.addEventListener("keydown", function(e) {
+function bindEnterKey(container, input) {
+  input.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
-      searchQuery = searchInput.value.trim();
+      searchQuery = input.value.trim();
       getNews(container);
     }
   });
+}
 
+function setupCategoryEvents(container, input) {
   let pills = container.querySelector("#news-category-pills");
-  pills.addEventListener("click", function(e) {
-    let pill = e.target.closest(".category-pill");
-    if (pill === null) return;
-    activeCategory = pill.dataset.category;
-    let allPills = pills.querySelectorAll(".category-pill");
-    for (let i = 0; i < allPills.length; i++) {
-      allPills[i].classList.remove("active");
-    }
-    pill.classList.add("active");
-    searchQuery = "";
-    searchInput.value = "";
-    getNews(container);
+  if (pills === null) return;
+  let list = pills.querySelectorAll(".category-pill");
+  list.forEach(function(pill) {
+    pill.addEventListener("click", function() {
+      activeCategory = pill.getAttribute("data-category");
+      updateActivePill(pills, pill);
+      searchQuery = "";
+      input.value = "";
+      getNews(container);
+    });
   });
 }
 
+function updateActivePill(pills, pill) {
+  let list = pills.querySelectorAll(".category-pill");
+  list.forEach(function(item) {
+    item.classList.remove("active");
+  });
+  pill.classList.add("active");
+}
+
 function getNews(container) {
-  let displayArea = container.querySelector("#news-display-area");
-  if (displayArea === null) return;
-
-  let articles = mockArticles[activeCategory];
-  if (articles === undefined) articles = [];
-
-  let filtered = [];
-  if (searchQuery === "") {
-    filtered = articles;
-  } else {
-    let queryLower = searchQuery.toLowerCase();
-    for (let i = 0; i < articles.length; i++) {
-      let titleMatch = articles[i].title.toLowerCase().indexOf(queryLower) !== -1;
-      let descMatch = articles[i].description.toLowerCase().indexOf(queryLower) !== -1;
-      if (titleMatch || descMatch) {
-        filtered.push(articles[i]);
-      }
-    }
-  }
-
+  let area = container.querySelector("#news-display-area");
+  if (area === null) return;
+  let list = mockArticles[activeCategory] ? mockArticles[activeCategory] : [];
+  let filtered = filterArticles(list);
   if (filtered.length === 0) {
-    displayArea.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📰</div><h3>No articles found.</h3><p style="margin-top:8px;">Try different keywords or switch categories.</p></div>';
+    area.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📰</div><h3>No articles found.</h3><p style="margin-top:8px;">Try different keywords or switch categories.</p></div>';
     return;
   }
+  renderArticlesList(area, filtered);
+}
 
-  displayArea.innerHTML = "";
+function filterArticles(articles) {
+  if (searchQuery === "") return articles;
+  let filtered = [];
+  let query = searchQuery.toLowerCase();
+  articles.forEach(function(item) {
+    let titleMatch = item.title.toLowerCase().indexOf(query) !== -1;
+    let descMatch = item.description.toLowerCase().indexOf(query) !== -1;
+    if (titleMatch || descMatch) {
+      filtered.push(item);
+    }
+  });
+  return filtered;
+}
+
+function renderArticlesList(area, filtered) {
+  area.innerHTML = "";
   let grid = document.createElement("div");
   grid.className = "news-grid";
-  for (let i = 0; i < filtered.length; i++) {
-    let card = showCard(filtered[i]);
-    grid.appendChild(card);
-  }
-  displayArea.appendChild(grid);
+  filtered.forEach(function(item) {
+    grid.appendChild(showCard(item));
+  });
+  area.appendChild(grid);
 }
 
 function showCard(article) {
   let card = document.createElement("div");
   card.className = "news-card";
-
-  let sourceName = "Web Report";
-  if (article.source && article.source.name) {
-    sourceName = article.source.name;
-  }
-
-  let dateString = "Recent";
-  let dateObj = new Date(article.publishedAt);
-  if (!isNaN(dateObj.getTime())) {
-    dateString = dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-  }
-
-  let desc = article.description;
-  if (!desc) desc = "No description available.";
-
-  card.innerHTML = '<div class="news-card-content"><div class="news-card-meta"><span class="news-card-source">' + sourceName + '</span><span>' + dateString + '</span></div><h3 class="news-card-title">' + article.title + '</h3><p class="news-card-desc">' + desc + '</p><a class="news-card-link" href="' + article.url + '" target="_blank">Read More →</a></div>';
+  let source = getSourceName(article);
+  let date = formatDate(article.publishedAt);
+  let desc = article.description ? article.description : "No description available.";
+  card.innerHTML = '<div class="news-card-content"><div class="news-card-meta"><span class="news-card-source">' + source + '</span><span>' + date + '</span></div><h3 class="news-card-title">' + article.title + '</h3><p class="news-card-desc">' + desc + '</p><a class="news-card-link" href="' + article.url + '" target="_blank">Read More →</a></div>';
   return card;
+}
+
+function getSourceName(article) {
+  if (article.source && article.source.name) {
+    return article.source.name;
+  }
+  return "Web Report";
+}
+
+function formatDate(publishedAt) {
+  if (!publishedAt) return "Recent";
+  let date = new Date(publishedAt);
+  let year = date.getFullYear();
+  if (year <= 0) return "Recent";
+  let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  let month = months[date.getMonth()];
+  let day = date.getDate();
+  return month + " " + day + ", " + year;
 }

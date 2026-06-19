@@ -1,296 +1,303 @@
-let draggedCard = null;
+let board = {
+  todo: [],
+  inProgress: [],
+  done: []
+};
+
+let draggedCardId = null;
+let draggedFromColumn = null;
+
+let editingCardId = null;
+let editingColumn = null;
+
+// Modal elements (DOM references)
+let modalOverlay = null;
+let modalTitle = null;
+let titleInput = null;
+let descInput = null;
+let priorityInput = null;
+let errorText = null;
+let saveCardBtn = null;
+let cancelCardBtn = null;
 
 export function init(container) {
-  loadData();
-  showBoard(container);
-  setupButtons(container);
-  setupDragDrop(container);
+  // Query elements inside current view container
+  modalOverlay = container.querySelector("#modalOverlay");
+  modalTitle = container.querySelector("#modalTitle");
+  titleInput = container.querySelector("#cardTitleInput");
+  descInput = container.querySelector("#cardDescInput");
+  priorityInput = container.querySelector("#cardPriorityInput");
+  errorText = container.querySelector("#errorText");
+  saveCardBtn = container.querySelector("#saveCardBtn");
+  cancelCardBtn = container.querySelector("#cancelCardBtn");
+
+  loadBoard();
+  renderBoard(container);
+  setupEventListeners(container);
 }
 
-function loadData() {
-  let saved = localStorage.getItem("stackone_kanban");
-  if (saved !== null) {
-    window.AppState.kanban = JSON.parse(saved);
+function loadBoard() {
+  const savedData = localStorage.getItem("myKanbanBoard");
+
+  if (savedData !== null) {
+    board = JSON.parse(savedData);
   } else {
-    let mockData = {
-      todo: [
-        { id: 101, title: "Implement user auth", description: "Integrate Firebase Auth routines.", priority: "high" },
-        { id: 102, title: "Write unit tests", description: "Create mocks for router validations.", priority: "medium" }
-      ],
-      inProgress: [
-        { id: 103, title: "Design landing page", description: "Style Hero section using CSS mesh background.", priority: "high" }
-      ],
-      done: [
-        { id: 104, title: "Project skeleton", description: "Commit initial directory layout details.", priority: "low" }
-      ]
-    };
-    window.AppState.kanban = mockData;
-    saveData();
+    board.todo = [
+      { id: 1, title: "Learn HTML basics", description: "Practice tags and structure", priority: "low" },
+      { id: 2, title: "Learn CSS Flexbox", description: "Build a simple layout", priority: "medium" }
+    ];
+    board.inProgress = [
+      { id: 3, title: "Build Kanban Board", description: "Using HTML, CSS, JS", priority: "high" }
+    ];
+    board.done = [
+      { id: 4, title: "Setup Project Folder", description: "Created index.html, style.css, app.js", priority: "low" }
+    ];
   }
-}
-
-function saveData() {
-  let board = window.AppState.kanban;
-  let json = JSON.stringify(board);
-  localStorage.setItem("stackone_kanban", json);
-}
-
-function showBoard(container) {
-  showColumn(container, "todo");
-  showColumn(container, "inProgress");
-  showColumn(container, "done");
-  updateCounts(container);
-}
-
-function updateCounts(container) {
-  let board = window.AppState.kanban;
-  let countTodo = container.querySelector("#count-todo");
-  let countInProgress = container.querySelector("#count-inProgress");
-  let countDone = container.querySelector("#count-done");
-
-  if (countTodo) countTodo.innerText = board.todo.length;
-  if (countInProgress) countInProgress.innerText = board.inProgress.length;
-  if (countDone) countDone.innerText = board.done.length;
-}
-
-function showColumn(container, colId) {
-  let list = container.querySelector("#cards-" + colId);
-  if (list === null) return;
-  list.innerHTML = "";
   
-  let cards = window.AppState.kanban[colId];
-  if (!cards) cards = [];
-
-  for (let i = 0; i < cards.length; i++) {
-    let cardData = cards[i];
-    let cardElement = makeCardHtml(cardData, colId);
-    list.appendChild(cardElement);
+  if (window.AppState) {
+    window.AppState.kanban = board;
   }
 }
 
-function makeCardHtml(cardData, colId) {
-  let el = document.createElement("div");
-  el.className = "kanban-card";
-  el.dataset.id = cardData.id;
-  el.dataset.column = colId;
-
-  if (cardData.isEditing === true) {
-    el.removeAttribute("draggable");
-    
-    let lowSel = "";
-    let medSel = "";
-    let highSel = "";
-    if (cardData.priority === "low") lowSel = "selected";
-    if (cardData.priority === "medium") medSel = "selected";
-    if (cardData.priority === "high") highSel = "selected";
-
-    let htmlStr = '<div class="kanban-edit-form">';
-    htmlStr = htmlStr + '<input type="text" class="form-input card-edit-title" value="' + cardData.title + '" placeholder="Task title..." style="margin-bottom: 4px;">';
-    htmlStr = htmlStr + '<textarea class="form-textarea card-edit-desc" placeholder="Task description..." rows="2" style="margin-bottom: 4px;">' + cardData.description + '</textarea>';
-    htmlStr = htmlStr + '<select class="form-select card-edit-priority" style="margin-bottom: 8px;">';
-    htmlStr = htmlStr + '<option value="low" ' + lowSel + '>Low</option>';
-    htmlStr = htmlStr + '<option value="medium" ' + medSel + '>Medium</option>';
-    htmlStr = htmlStr + '<option value="high" ' + highSel + '>High</option>';
-    htmlStr = htmlStr + '</select>';
-    htmlStr = htmlStr + '<div style="display: flex; gap: 6px;">';
-    htmlStr = htmlStr + '<button class="btn btn-primary btn-save-card" style="padding: 6px 12px; font-size: 0.8rem; flex: 1;">Save</button>';
-    htmlStr = htmlStr + '<button class="btn btn-secondary btn-cancel-card" style="padding: 6px 12px; font-size: 0.8rem;">Cancel</button>';
-    htmlStr = htmlStr + '</div></div>';
-    
-    el.innerHTML = htmlStr;
-  } else {
-    el.setAttribute("draggable", "true");
-    
-    let desc = cardData.description;
-    if (desc === "") desc = "No description.";
-
-    let htmlStr = '<h4 class="kanban-card-title">' + cardData.title + '</h4>';
-    htmlStr = htmlStr + '<p class="kanban-card-desc">' + desc + '</p>';
-    htmlStr = htmlStr + '<div class="kanban-card-footer">';
-    htmlStr = htmlStr + '<span class="priority-badge ' + cardData.priority + '">' + cardData.priority + '</span>';
-    htmlStr = htmlStr + '<div class="kanban-card-actions">';
-    htmlStr = htmlStr + '<button class="btn-icon edit" title="Edit Card"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button>';
-    htmlStr = htmlStr + '<button class="btn-icon delete" title="Delete Card"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>';
-    htmlStr = htmlStr + '</div></div>';
-    
-    el.innerHTML = htmlStr;
-    
-    el.addEventListener("dragstart", function(event) {
-      draggedCard = event.target;
-      event.target.style.opacity = "0.5";
-    });
-    
-    el.addEventListener("dragend", function(event) {
-      event.target.style.opacity = "1";
-    });
-  }
-  return el;
-}
-
-function setupDragDrop(container) {
-  let columns = container.querySelectorAll(".kanban-column");
-  for (let i = 0; i < columns.length; i++) {
-    let col = columns[i];
-    
-    col.addEventListener("dragover", function(event) {
-      event.preventDefault();
-    });
-    
-    col.addEventListener("drop", function(event) {
-      event.preventDefault();
-      let target = event.target;
-      let targetCol = target.closest(".kanban-column");
-      if (targetCol !== null && draggedCard !== null) {
-        let list = targetCol.querySelector(".kanban-cards-list");
-        list.appendChild(draggedCard);
-        draggedCard.dataset.column = targetCol.dataset.column;
-        updateBoardState();
-      }
-    });
-  }
-}
-
-function updateBoardState() {
-  let board = window.AppState.kanban;
-  let allTasks = [];
+function saveBoard() {
+  const dataAsText = JSON.stringify(board);
+  localStorage.setItem("myKanbanBoard", dataAsText);
   
-  for (let i = 0; i < board.todo.length; i++) allTasks.push(board.todo[i]);
-  for (let i = 0; i < board.inProgress.length; i++) allTasks.push(board.inProgress[i]);
-  for (let i = 0; i < board.done.length; i++) allTasks.push(board.done[i]);
+  if (window.AppState) {
+    window.AppState.kanban = board;
+  }
+}
 
-  let columns = ["todo", "inProgress", "done"];
-  for (let c = 0; c < columns.length; c++) {
-    let colId = columns[c];
-    let listEl = document.querySelector("#cards-" + colId);
-    if (listEl !== null) {
-      let cardEls = listEl.querySelectorAll(".kanban-card");
-      let updatedCards = [];
-      for (let i = 0; i < cardEls.length; i++) {
-        let cardId = parseInt(cardEls[i].dataset.id, 10);
-        let task = null;
-        for (let j = 0; j < allTasks.length; j++) {
-          if (allTasks[j].id === cardId) {
-            task = allTasks[j];
-          }
-        }
-        if (task !== null) updatedCards.push(task);
-      }
-      board[colId] = updatedCards;
+function renderBoard(container = document) {
+  const columnNames = ["todo", "inProgress", "done"];
+
+  for (let i = 0; i < columnNames.length; i++) {
+    const columnName = columnNames[i];
+    const listContainer = container.querySelector("#cards-" + columnName);
+    if (!listContainer) continue;
+
+    listContainer.innerHTML = "";
+
+    const tasks = board[columnName] || [];
+
+    for (let j = 0; j < tasks.length; j++) {
+      const task = tasks[j];
+      const cardElement = createCardElement(task, columnName, container);
+      listContainer.appendChild(cardElement);
+    }
+
+    const countElement = container.querySelector("#count-" + columnName);
+    if (countElement) {
+      countElement.innerText = tasks.length;
     }
   }
-  saveData();
-  updateCounts(document);
 }
 
-function setupButtons(container) {
-  let addBtns = container.querySelectorAll(".btn-add-task");
-  for (let i = 0; i < addBtns.length; i++) {
-    let btn = addBtns[i];
-    btn.addEventListener("click", function() {
-      let colId = btn.dataset.column;
-      let newCard = {
-        id: Date.now(),
-        title: "",
-        description: "",
-        priority: "medium",
-        isEditing: true
-      };
-      window.AppState.kanban[colId].push(newCard);
-      showBoard(container);
-      
-      let colEl = container.querySelector("#col-" + colId);
-      if (colEl) {
-        let inputs = colEl.querySelectorAll(".card-edit-title");
-        let lastInput = inputs[inputs.length - 1];
-        if (lastInput) lastInput.focus();
+function createCardElement(task, columnName, container) {
+  const card = document.createElement("div");
+  card.className = "card priority-" + task.priority;
+  card.setAttribute("draggable", "true");
+  card.setAttribute("data-id", task.id);
+  card.setAttribute("data-column", columnName);
+
+  card.innerHTML =
+    "<h4>" + task.title + "</h4>" +
+    "<p>" + task.description + "</p>" +
+    "<div class='card-footer'>" +
+      "<span class='priority-tag'>" + task.priority + "</span>" +
+      "<div class='card-buttons'>" +
+        "<button class='edit-btn'>Edit</button>" +
+        "<button class='delete-btn'>Delete</button>" +
+      "</div>" +
+    "</div>";
+
+  card.addEventListener("dragstart", function () {
+    draggedCardId = task.id;
+    draggedFromColumn = columnName;
+    card.classList.add("dragging");
+  });
+
+  card.addEventListener("dragend", function () {
+    card.classList.remove("dragging");
+  });
+
+  const editButton = card.querySelector(".edit-btn");
+  editButton.addEventListener("click", function () {
+    openEditModal(task, columnName);
+  });
+
+  const deleteButton = card.querySelector(".delete-btn");
+  deleteButton.addEventListener("click", function () {
+    deleteCard(task.id, columnName, container);
+  });
+
+  return card;
+}
+
+function deleteCard(id, columnName, container) {
+  const confirmDelete = confirm("Are you sure you want to delete this card?");
+
+  if (confirmDelete === true) {
+    const tasks = board[columnName];
+    const newTasks = [];
+
+    for (let i = 0; i < tasks.length; i++) {
+      if (tasks[i].id !== id) {
+        newTasks.push(tasks[i]);
       }
+    }
+
+    board[columnName] = newTasks;
+    saveBoard();
+    renderBoard(container);
+  }
+}
+
+function openAddModal(columnName) {
+  editingCardId = null;
+  editingColumn = columnName;
+
+  modalTitle.innerText = "Add Card";
+  titleInput.value = "";
+  descInput.value = "";
+  priorityInput.value = "medium";
+  errorText.innerText = "";
+
+  modalOverlay.classList.add("show");
+}
+
+function openEditModal(task, columnName) {
+  editingCardId = task.id;
+  editingColumn = columnName;
+
+  modalTitle.innerText = "Edit Card";
+  titleInput.value = task.title;
+  descInput.value = task.description;
+  priorityInput.value = task.priority;
+  errorText.innerText = "";
+
+  modalOverlay.classList.add("show");
+}
+
+function closeModal() {
+  modalOverlay.classList.remove("show");
+}
+
+function setupEventListeners(container) {
+  // Bind save buttons
+  saveCardBtn.replaceWith(saveCardBtn.cloneNode(true));
+  saveCardBtn = container.querySelector("#saveCardBtn");
+  saveCardBtn.addEventListener("click", function () {
+    const titleValue = titleInput.value.trim();
+    const descValue = descInput.value.trim();
+    const priorityValue = priorityInput.value;
+
+    if (titleValue === "") {
+      errorText.innerText = "Title is required.";
+      return;
+    }
+
+    if (editingCardId === null) {
+      const newCard = {
+        id: Date.now(),
+        title: titleValue,
+        description: descValue,
+        priority: priorityValue
+      };
+      board[editingColumn].push(newCard);
+    } else {
+      const tasks = board[editingColumn];
+
+      for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].id === editingCardId) {
+          tasks[i].title = titleValue;
+          tasks[i].description = descValue;
+          tasks[i].priority = priorityValue;
+        }
+      }
+    }
+
+    saveBoard();
+    renderBoard(container);
+    closeModal();
+  });
+
+  // Bind cancel button
+  cancelCardBtn.replaceWith(cancelCardBtn.cloneNode(true));
+  cancelCardBtn = container.querySelector("#cancelCardBtn");
+  cancelCardBtn.addEventListener("click", function () {
+    closeModal();
+  });
+
+  // Add click listeners to all "+ Add Card" buttons
+  const addButtons = container.querySelectorAll(".add-btn");
+  for (let k = 0; k < addButtons.length; k++) {
+    addButtons[k].addEventListener("click", function (event) {
+      const columnName = event.target.getAttribute("data-column");
+      openAddModal(columnName);
     });
   }
 
-  let boardEl = container.querySelector(".kanban-board");
-  if (boardEl !== null) {
-    boardEl.addEventListener("click", function(e) {
-      let card = e.target.closest(".kanban-card");
-      if (card === null) return;
-      
-      let cardId = parseInt(card.dataset.id, 10);
-      let colId = card.dataset.column;
-      
-      if (e.target.classList.contains("btn-save-card")) {
-        let titleVal = card.querySelector(".card-edit-title").value.trim();
-        let descVal = card.querySelector(".card-edit-desc").value.trim();
-        let priorityVal = card.querySelector(".card-edit-priority").value;
-        
-        if (titleVal === "") {
-          card.querySelector(".card-edit-title").classList.add("input-invalid");
-          return;
-        }
-        
-        let list = window.AppState.kanban[colId];
-        for (let j = 0; j < list.length; j++) {
-          if (list[j].id === cardId) {
-            list[j].title = titleVal;
-            list[j].description = descVal;
-            list[j].priority = priorityVal;
-            delete list[j].isEditing;
-          }
-        }
-        saveData();
-        showBoard(container);
-      } 
-      else if (e.target.classList.contains("btn-cancel-card")) {
-        let list = window.AppState.kanban[colId];
-        let updatedList = [];
-        for (let j = 0; j < list.length; j++) {
-          let task = list[j];
-          if (task.id !== cardId) {
-            updatedList.push(task);
-          } else if (task.title !== "") {
-            delete task.isEditing;
-            updatedList.push(task);
-          }
-        }
-        window.AppState.kanban[colId] = updatedList;
-        showBoard(container);
+  // Bind drop zones drag & drop handlers
+  const dropZones = container.querySelectorAll(".cards-list");
+  for (let m = 0; m < dropZones.length; m++) {
+    const zone = dropZones[m];
+
+    zone.addEventListener("dragover", function (event) {
+      event.preventDefault();
+    });
+
+    zone.addEventListener("dragenter", function (event) {
+      event.preventDefault();
+      const targetZone = event.target.closest(".cards-list");
+      if (targetZone) {
+        targetZone.classList.add("drag-over");
       }
-      else if (e.target.closest(".btn-icon.edit")) {
-        let board = window.AppState.kanban;
-        let columns = ["todo", "inProgress", "done"];
-        for (let c = 0; c < columns.length; c++) {
-          let list = board[columns[c]];
-          let cleanList = [];
-          for (let i = 0; i < list.length; i++) {
-            let task = list[i];
-            if (task.isEditing && task.title !== "") {
-              delete task.isEditing;
-              cleanList.push(task);
-            } else if (!task.isEditing) {
-              cleanList.push(task);
-            }
-          }
-          board[columns[c]] = cleanList;
-        }
-        
-        let currentList = window.AppState.kanban[colId];
-        for (let j = 0; j < currentList.length; j++) {
-          if (currentList[j].id === cardId) {
-            currentList[j].isEditing = true;
-          }
-        }
-        showBoard(container);
+    });
+
+    zone.addEventListener("dragleave", function (event) {
+      event.preventDefault();
+      const targetZone = event.target.closest(".cards-list");
+      if (targetZone) {
+        targetZone.classList.remove("drag-over");
       }
-      else if (e.target.closest(".btn-icon.delete")) {
-        let list = window.AppState.kanban[colId];
-        let updatedList = [];
-        for (let j = 0; j < list.length; j++) {
-          if (list[j].id !== cardId) {
-            updatedList.push(list[j]);
-          }
-        }
-        window.AppState.kanban[colId] = updatedList;
-        saveData();
-        showBoard(container);
+    });
+
+    zone.addEventListener("drop", function (event) {
+      event.preventDefault();
+      const targetZone = event.target.closest(".cards-list");
+      if (targetZone) {
+        targetZone.classList.remove("drag-over");
+        const targetColumn = targetZone.id.replace("cards-", "");
+        moveCard(draggedCardId, draggedFromColumn, targetColumn, container);
       }
     });
   }
+}
+
+function moveCard(id, fromColumn, toColumn, container) {
+  if (fromColumn === toColumn) {
+    return;
+  }
+
+  const fromTasks = board[fromColumn];
+  let movedTask = null;
+  const remainingTasks = [];
+
+  for (let i = 0; i < fromTasks.length; i++) {
+    if (fromTasks[i].id === id) {
+      movedTask = fromTasks[i];
+    } else {
+      remainingTasks.push(fromTasks[i]);
+    }
+  }
+
+  board[fromColumn] = remainingTasks;
+
+  if (movedTask !== null) {
+    board[toColumn].push(movedTask);
+  }
+
+  saveBoard();
+  renderBoard(container);
 }

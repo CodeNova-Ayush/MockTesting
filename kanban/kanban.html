@@ -12,8 +12,8 @@
         </span>
         <span class="kanban-column-count" id="count-todo">0</span>
       </div>
-      <div class="kanban-cards-list" id="cards-todo"></div>
-      <button class="btn-add-task" data-column="todo">+ Add Card</button>
+      <div class="kanban-cards-list cards-list" id="cards-todo"></div>
+      <button class="btn-add-task add-btn" data-column="todo">+ Add Card</button>
     </div>
 
     <div class="kanban-column" data-column="inProgress" id="col-inProgress">
@@ -23,8 +23,8 @@
         </span>
         <span class="kanban-column-count" id="count-inProgress">0</span>
       </div>
-      <div class="kanban-cards-list" id="cards-inProgress"></div>
-      <button class="btn-add-task" data-column="inProgress">+ Add Card</button>
+      <div class="kanban-cards-list cards-list" id="cards-inProgress"></div>
+      <button class="btn-add-task add-btn" data-column="inProgress">+ Add Card</button>
     </div>
 
     <div class="kanban-column" data-column="done" id="col-done">
@@ -34,8 +34,41 @@
         </span>
         <span class="kanban-column-count" id="count-done">0</span>
       </div>
-      <div class="kanban-cards-list" id="cards-done"></div>
-      <button class="btn-add-task" data-column="done">+ Add Card</button>
+      <div class="kanban-cards-list cards-list" id="cards-done"></div>
+      <button class="btn-add-task add-btn" data-column="done">+ Add Card</button>
+    </div>
+  </div>
+
+  <!-- Modal Overlay -->
+  <div id="modalOverlay" class="kanban-modal-overlay">
+    <div class="kanban-modal">
+      <h3 id="modalTitle" class="modal-title">Add Card</h3>
+      
+      <div class="form-group">
+        <label for="cardTitleInput" class="form-label">Title</label>
+        <input type="text" id="cardTitleInput" class="form-input" placeholder="Enter task title...">
+      </div>
+      
+      <div class="form-group">
+        <label for="cardDescInput" class="form-label">Description</label>
+        <textarea id="cardDescInput" class="form-textarea" placeholder="Enter task description..." rows="3"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="cardPriorityInput" class="form-label">Priority</label>
+        <select id="cardPriorityInput" class="form-select">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+      
+      <div id="errorText" class="form-error"></div>
+      
+      <div class="modal-actions">
+        <button id="cancelCardBtn" class="btn btn-secondary">Cancel</button>
+        <button id="saveCardBtn" class="btn btn-primary">Save</button>
+      </div>
     </div>
   </div>
 </div>

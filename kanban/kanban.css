@@ -1,65 +1,484 @@
 .kanban-container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
+
 .kanban-board {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 24px;
   align-items: flex-start;
 }
+
 .kanban-column {
   border: 1px solid gray;
   border-radius: 12px;
-  padding: 16px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   min-height: 500px;
   flex: 1;
   min-width: 250px;
 }
-body.dark .kanban-column { background-color: rgb(20, 20, 24); border-color: rgb(60, 60, 65); }
-body.light .kanban-column { background-color: white; border-color: lightgray; }
-.kanban-column.drag-over { background-color: gray !important; border-color: rgb(198, 90, 61) !important; border-style: dashed !important; }
-body.dark .kanban-column.drag-over { background-color: rgb(45, 45, 50) !important; }
-body.light .kanban-column.drag-over { background-color: lightgray !important; }
-.kanban-column-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid gray; padding-bottom: 10px; }
-body.dark .kanban-column-header { border-bottom-color: rgb(60, 60, 65); }
-body.light .kanban-column-header { border-bottom-color: lightgray; }
-.kanban-column-title { font-size: 1.05rem; font-weight: bold; }
-.kanban-column-count { font-size: 0.8rem; font-weight: bold; border: 1px solid gray; padding: 2px 8px; border-radius: 20px; color: gray; }
-body.dark .kanban-column-count { background-color: rgb(45, 45, 50); border-color: rgb(80, 80, 85); }
-body.light .kanban-column-count { background-color: whitesmoke; border-color: lightgray; color: dimgray; }
-.kanban-cards-list { display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 400px; }
-.kanban-card { border: 1px solid gray; border-radius: 10px; padding: 16px; cursor: grab; user-select: none; display: flex; flex-direction: column; gap: 10px; }
-body.dark .kanban-card { background-color: rgb(30, 30, 35); border-color: rgb(60, 60, 65); }
-body.light .kanban-card { background-color: whitesmoke; border-color: lightgray; }
-.kanban-card:hover { border-color: rgb(198, 90, 61); }
-.kanban-card:active { cursor: grabbing; }
-.kanban-card.dragging { opacity: 0.4; transform: scale(0.98); }
-.kanban-card-title { font-size: 0.95rem; font-weight: bold; }
-body.dark .kanban-card-title { color: white; }
-body.light .kanban-card-title { color: black; }
-.kanban-card-desc { font-size: 0.85rem; color: gray; line-height: 1.4; }
-body.light .kanban-card-desc { color: dimgray; }
-.kanban-card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
-.priority-badge { font-size: 0.7rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-.priority-badge.low { background-color: green; color: white; }
-.priority-badge.medium { background-color: orange; color: white; }
-.priority-badge.high { background-color: crimson; color: white; }
-.kanban-card-actions { display: flex; gap: 4px; }
-.btn-add-task { width: 100%; border: 1px dashed gray; border-radius: 8px; padding: 10px; font-weight: bold; font-size: 0.85rem; cursor: pointer; background-color: transparent; }
-body.dark .btn-add-task { border-color: rgb(80, 80, 85); color: silver; }
-body.light .btn-add-task { border-color: lightgray; color: dimgray; }
-.btn-add-task:hover { border-color: rgb(198, 90, 61); color: rgb(198, 90, 61); }
-body.dark .btn-add-task:hover { background-color: rgb(45, 45, 50); }
-body.light .btn-add-task:hover { background-color: whitesmoke; }
-.kanban-edit-form { display: flex; flex-direction: column; gap: 8px; }
-.kanban-edit-form .form-input, .kanban-edit-form .form-textarea, .kanban-edit-form .form-select { padding: 6px 10px; font-size: 0.85rem; }
+
+body.dark .kanban-column {
+  background-color: rgb(20, 20, 24);
+  border-color: rgb(60, 60, 65);
+}
+
+body.light .kanban-column {
+  background-color: white;
+  border-color: lightgray;
+}
+
+.kanban-column.drag-over {
+  background-color: gray !important;
+  border-color: rgb(198, 90, 61) !important;
+  border-style: dashed !important;
+}
+
+body.dark .kanban-column.drag-over {
+  background-color: rgb(45, 45, 50) !important;
+}
+
+body.light .kanban-column.drag-over {
+  background-color: lightgray !important;
+}
+
+.kanban-column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid gray;
+  padding-bottom: 12px;
+  margin-bottom: 4px;
+}
+
+body.dark .kanban-column-header {
+  border-bottom-color: rgb(60, 60, 65);
+}
+
+body.light .kanban-column-header {
+  border-bottom-color: lightgray;
+}
+
+.kanban-column-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  letter-spacing: 0.3px;
+}
+
+.kanban-column-count {
+  font-size: 0.8rem;
+  font-weight: bold;
+  border: 1px solid gray;
+  padding: 3px 10px;
+  border-radius: 20px;
+  color: gray;
+}
+
+body.dark .kanban-column-count {
+  background-color: rgb(45, 45, 50);
+  border-color: rgb(80, 80, 85);
+}
+
+body.light .kanban-column-count {
+  background-color: whitesmoke;
+  border-color: lightgray;
+  color: dimgray;
+}
+
+.kanban-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  min-height: 400px;
+}
+
+.kanban-card {
+  border: 1px solid gray;
+  border-radius: 10px;
+  padding: 18px;
+  cursor: grab;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.dark .kanban-card {
+  background-color: rgb(30, 30, 35);
+  border-color: rgb(60, 60, 65);
+}
+
+body.light .kanban-card {
+  background-color: whitesmoke;
+  border-color: lightgray;
+}
+
+.kanban-card:hover {
+  border-color: rgb(198, 90, 61);
+}
+
+.kanban-card:active {
+  cursor: grabbing;
+}
+
+.kanban-card.dragging {
+  opacity: 0.4;
+  transform: scale(0.98);
+}
+
+.kanban-card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.4;
+  letter-spacing: 0.1px;
+}
+
+body.dark .kanban-card-title {
+  color: white;
+}
+
+body.light .kanban-card-title {
+  color: black;
+}
+
+.kanban-card-desc {
+  font-size: 0.85rem;
+  color: gray;
+  line-height: 1.5;
+  margin-bottom: 2px;
+}
+
+body.light .kanban-card-desc {
+  color: dimgray;
+}
+
+.kanban-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.priority-badge {
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.priority-badge.low {
+  background-color: green;
+  color: white;
+}
+
+.priority-badge.medium {
+  background-color: orange;
+  color: white;
+}
+
+.priority-badge.high {
+  background-color: crimson;
+  color: white;
+}
+
+.kanban-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-add-task {
+  width: 100%;
+  border: 1px dashed gray;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background-color: transparent;
+  margin-top: 4px;
+}
+
+body.dark .btn-add-task {
+  border-color: rgb(80, 80, 85);
+  color: silver;
+}
+
+body.light .btn-add-task {
+  border-color: lightgray;
+  color: dimgray;
+}
+
+.btn-add-task:hover {
+  border-color: rgb(198, 90, 61);
+  color: rgb(198, 90, 61);
+}
+
+body.dark .btn-add-task:hover {
+  background-color: rgb(45, 45, 50);
+}
+
+body.light .btn-add-task:hover {
+  background-color: whitesmoke;
+}
+
+.kanban-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.kanban-edit-form .form-input,
+.kanban-edit-form .form-textarea,
+.kanban-edit-form .form-select {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+}
 
 @media (max-width: 900px) {
-  .kanban-board { flex-direction: column; }
-  .kanban-column { width: 100%; min-width: auto; }
+  .kanban-board {
+    flex-direction: column;
+  }
+  .kanban-column {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+/* Modal Overlay */
+.kanban-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.kanban-modal-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Modal Body */
+.kanban-modal {
+  width: 90%;
+  max-width: 480px;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+  border: 1px solid gray;
+}
+
+.kanban-modal-overlay.show .kanban-modal {
+  transform: translateY(0);
+}
+
+body.dark .kanban-modal {
+  background-color: rgb(30, 30, 38);
+  border-color: rgb(60, 60, 65);
+  color: white;
+}
+
+body.light .kanban-modal {
+  background-color: white;
+  border-color: lightgray;
+  color: black;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Priority Card style mapping */
+.card {
+  border: 1px solid gray;
+  border-radius: 10px;
+  padding: 18px;
+  cursor: grab;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+body.dark .card {
+  background-color: rgb(30, 30, 35);
+  border-color: rgb(60, 60, 65);
+  color: white;
+}
+
+body.light .card {
+  background-color: whitesmoke;
+  border-color: lightgray;
+  color: black;
+}
+
+.card:hover {
+  border-color: rgb(198, 90, 61);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+body.dark .card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.card:active {
+  cursor: grabbing;
+}
+
+.card.dragging {
+  opacity: 0.4;
+  transform: scale(0.98);
+}
+
+.card h4 {
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.4;
+  letter-spacing: 0.1px;
+}
+
+.card p {
+  font-size: 0.85rem;
+  color: gray;
+  line-height: 1.5;
+  margin-bottom: 2px;
+}
+
+body.light .card p {
+  color: dimgray;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.priority-tag {
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+/* Card color indicators based on priority */
+.card.priority-low {
+  border-left: 4px solid green;
+}
+.card.priority-low .priority-tag {
+  background-color: rgba(0, 128, 0, 0.15);
+  color: #2e7d32;
+}
+body.dark .card.priority-low .priority-tag {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #81c784;
+}
+
+.card.priority-medium {
+  border-left: 4px solid orange;
+}
+.card.priority-medium .priority-tag {
+  background-color: rgba(255, 165, 0, 0.15);
+  color: #ef6c00;
+}
+body.dark .card.priority-medium .priority-tag {
+  background-color: rgba(255, 152, 0, 0.2);
+  color: #ffb74d;
+}
+
+.card.priority-high {
+  border-left: 4px solid crimson;
+}
+.card.priority-high .priority-tag {
+  background-color: rgba(220, 20, 60, 0.15);
+  color: #c62828;
+}
+body.dark .card.priority-high .priority-tag {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #e57373;
+}
+
+.card-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.card-buttons button {
+  background: none;
+  border: 1px solid gray;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+body.dark .card-buttons button {
+  border-color: rgb(80, 80, 85);
+  color: silver;
+}
+
+body.light .card-buttons button {
+  border-color: lightgray;
+  color: dimgray;
+}
+
+body.dark .card-buttons button.edit-btn:hover {
+  background-color: rgba(198, 90, 61, 0.15);
+  border-color: rgb(198, 90, 61);
+  color: rgb(224, 122, 92);
+}
+
+body.light .card-buttons button.edit-btn:hover {
+  background-color: rgba(198, 90, 61, 0.1);
+  border-color: rgb(198, 90, 61);
+  color: rgb(198, 90, 61);
+}
+
+.card-buttons button.delete-btn:hover {
+  background-color: rgba(220, 20, 60, 0.15);
+  border-color: crimson;
+  color: #e57373;
+}
+
+/* Column drag over style */
+.cards-list.drag-over {
+  background-color: rgba(128, 128, 128, 0.15);
+  border: 2px dashed rgb(198, 90, 61);
+  border-radius: 8px;
 }
