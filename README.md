@@ -70,6 +70,3 @@ File Structure
 ├── quiz.js                 # Timed JS trivia engine modules
 └── README.md               # Main repository documentation
 How to Run
-Clone the repository.
-Serve the directory using any static web server (such as python3 -m http.server or npx http-server).
-Open index.html in your web browser and click Get Started to access the dashboard workspace hubs!
